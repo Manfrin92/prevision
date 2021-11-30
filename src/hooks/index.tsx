@@ -1,7 +1,8 @@
-// import React from 'react';
+import React from 'react';
+import { PlayerProvider } from './playerContext';
 
-// const AppProvider: React.FC = ({ children }) => (
-//     <MenuProvider>{children}</MenuProvider>
-// );
+const AppProvider: React.FC = ({ children }) => (
+    <PlayerProvider>{children}</PlayerProvider>
+);
 
-// export default AppProvider;
+export default AppProvider;
