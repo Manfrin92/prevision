@@ -14,7 +14,7 @@ interface PlayerContextData {
     handleAddPlayerToGame(player: Player): void;
     maximumNumberOfRounds: number;
     registeredPlayersInAsyncStorage: Player[];
-    handleAddPlayerToListOfRegisteredPlayers(): Player[];
+    handleAddPlayerToListOfRegisteredPlayers(player: Player): Promise<void>;
 }
 
 const PlayerContext = createContext<PlayerContextData>({} as PlayerContextData);
@@ -26,10 +26,6 @@ export const PlayerProvider: React.FC = ({ children }) => {
         registeredPlayersInAsyncStorage,
         setRegisteredPlayersInAsyncStorage,
     ] = useState([] as Player[]);
-
-    const handleAddPlayerToListOfRegisteredPlayers = useCallback(() => {
-        return registeredPlayersInAsyncStorage;
-    }, [registeredPlayersInAsyncStorage, setRegisteredPlayersInAsyncStorage]);
 
     const getInitialPlayerInAsyncStorage = useCallback(async () => {
         const listOfPlayers = await getPlayersInAsyncStorage();
@@ -68,6 +64,14 @@ export const PlayerProvider: React.FC = ({ children }) => {
     useEffect(() => {
         getInitialPlayerInAsyncStorage();
     }, []);
+
+    const handleAddPlayerToListOfRegisteredPlayers = useCallback(
+        async (player: Player) => {
+            await addPlayerInAsyncStorage(player);
+            getInitialPlayerInAsyncStorage();
+        },
+        [registeredPlayersInAsyncStorage, setRegisteredPlayersInAsyncStorage]
+    );
 
     return (
         <PlayerContext.Provider

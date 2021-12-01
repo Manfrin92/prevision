@@ -5,7 +5,7 @@ import Button from '../../components/button';
 
 import PlayerContext from '../../hooks/playerContext';
 
-const AddPlayers: React.FC = () => {
+const Board: React.FC = () => {
     const {
         handleAddPlayerToGame,
         maximumNumberOfRounds,
@@ -23,4 +23,4 @@ const AddPlayers: React.FC = () => {
     );
 };
 
-export default AddPlayers;
+export default Board;
