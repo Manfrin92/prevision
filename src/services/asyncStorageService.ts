@@ -4,34 +4,6 @@ import { Player } from '../models/player';
 
 const storageItemName = '@Prevision:players';
 
-export const listOfRegisteredPlayersName = ['Joao', 'Jose', 'Ricardo'];
-
-export const listOfRegisteredPlayers = [
-    { name: 'Joao' },
-    { name: 'Jose' },
-    { name: 'Ricardo' },
-    { name: 'Felipe' },
-];
-
-export async function getPlayersNamesInAsyncStorage(): Promise<string[] | []> {
-    try {
-        const allPlayers = await AsyncStorage.getItem(storageItemName);
-        if (allPlayers) {
-            const parsedStoragedPlayers: Player[] = JSON.parse(allPlayers);
-            if (parsedStoragedPlayers && parsedStoragedPlayers.length > 0) {
-                const listOfPlayerNames = [] as string[];
-                parsedStoragedPlayers.map((player) =>
-                    listOfPlayerNames.push(player.name)
-                );
-                return listOfPlayerNames;
-            }
-        }
-    } catch (err) {
-        // // console.log(err);
-    }
-    return [];
-}
-
 export async function getPlayersInAsyncStorage(): Promise<Player[] | null> {
     try {
         const allPlayers = await AsyncStorage.getItem(storageItemName);

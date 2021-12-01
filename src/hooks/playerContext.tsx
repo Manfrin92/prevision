@@ -3,7 +3,11 @@ import React, { createContext, useState, useCallback, useEffect } from 'react';
 import { getMaximumNumberOfRounds } from '../services/gameCalculations';
 
 import { Player } from '../models/player';
-import { getPlayersInAsyncStorage } from '../services/asyncStorageService';
+import {
+    getPlayersInAsyncStorage,
+    addPlayerInAsyncStorage,
+} from '../services/asyncStorageService';
+import { Alert } from 'react-native';
 
 interface PlayerContextData {
     playersToPlay: [];
@@ -23,17 +27,6 @@ export const PlayerProvider: React.FC = ({ children }) => {
         setRegisteredPlayersInAsyncStorage,
     ] = useState([] as Player[]);
 
-    const handleAddPlayerToGame = useCallback(
-        (player: Player) => {
-            setPlayersToPlay(() => [...playersToPlay, player]);
-
-            setMaximumNumberOfRounds(
-                +getMaximumNumberOfRounds([...playersToPlay, player].length)
-            );
-        },
-        [playersToPlay, setPlayersToPlay]
-    );
-
     const handleAddPlayerToListOfRegisteredPlayers = useCallback(() => {
         return registeredPlayersInAsyncStorage;
     }, [registeredPlayersInAsyncStorage, setRegisteredPlayersInAsyncStorage]);
@@ -44,6 +37,33 @@ export const PlayerProvider: React.FC = ({ children }) => {
             setRegisteredPlayersInAsyncStorage(listOfPlayers);
         }
     }, []);
+
+    const isPlayerAlreadyInGame = useCallback(
+        (player): boolean => {
+            const playerAlreadyInGame = playersToPlay.find(
+                (playerAlreadyInGame) =>
+                    playerAlreadyInGame.name === player.name
+            );
+            return playerAlreadyInGame ? true : false;
+        },
+        [playersToPlay]
+    );
+
+    const handleAddPlayerToGame = useCallback(
+        (player: Player) => {
+            if (!isPlayerAlreadyInGame(player)) {
+                setPlayersToPlay(() => [...playersToPlay, player]);
+
+                setMaximumNumberOfRounds(
+                    +getMaximumNumberOfRounds([...playersToPlay, player].length)
+                );
+            } else {
+                Alert.alert('Jogador já adicionado');
+            }
+        },
+
+        [playersToPlay, setPlayersToPlay]
+    );
 
     useEffect(() => {
         getInitialPlayerInAsyncStorage();

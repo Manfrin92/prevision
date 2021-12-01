@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Text } from 'react-native';
+import PlayerContext from '../../hooks/playerContext';
+import { Player } from '../../models/player';
 
 import { Container } from './styles';
 
-interface PlayersListProps {
-    listOfPlayers: string[];
-}
+const PlayersList: React.FC = () => {
+    const { playersToPlay } = useContext(PlayerContext);
 
-const PlayersList: React.FC<PlayersListProps> = ({ listOfPlayers }) => {
     return (
         <Container>
-            {listOfPlayers.map((player) => (
-                <Text>{player}</Text>
-            ))}
+            {playersToPlay &&
+                playersToPlay.length > 0 &&
+                playersToPlay.map((player: Player, index) => (
+                    <Text key={Math.random()}>
+                        {index + 1}. {player.name}
+                    </Text>
+                ))}
         </Container>
     );
 };

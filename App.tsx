@@ -1,11 +1,14 @@
 import React from 'react';
 import { View } from 'react-native';
-import Main from './src/screens/main';
+import AppProvider from './src/hooks';
+import ConfigureGame from './src/screens/configureGame/configureGame';
 
 export default function App() {
     return (
         <View>
-            <Main />
+            <AppProvider>
+                <ConfigureGame />
+            </AppProvider>
         </View>
     );
 }
