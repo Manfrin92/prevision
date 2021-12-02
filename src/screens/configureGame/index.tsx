@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -9,6 +10,7 @@ import PlayerContext from '../../hooks/playerContext';
 import { Title } from './styles';
 
 const ConfigureGame: React.FC = () => {
+    const navigation = useNavigation();
     const {
         handleAddPlayerToGame,
         maximumNumberOfRounds,
@@ -32,6 +34,11 @@ const ConfigureGame: React.FC = () => {
                 marginTop: '16%',
             }}
         >
+            {/* @ts-ignore */}
+            <Button onPress={() => navigation.navigate('AddPlayers')}>
+                Adicionar mais jogadores na lista
+            </Button>
+
             <Title> Selecione os jogadores </Title>
             <PlayerSelect
                 listOfRegisteredPlayers={registeredPlayersInAsyncStorage}
@@ -44,8 +51,10 @@ const ConfigureGame: React.FC = () => {
             <Title style={{ marginBottom: 12 }}>
                 Número máximo de rodadas: {maximumNumberOfRounds}{' '}
             </Title>
-
-            <Button onPress={() => {}}>Iniciar Partida</Button>
+            {/* @ts-ignore */}
+            <Button onPress={() => navigation.navigate('Board')}>
+                Iniciar Partida
+            </Button>
         </ScrollView>
     );
 };

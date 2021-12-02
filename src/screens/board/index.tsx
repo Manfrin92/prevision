@@ -10,7 +10,12 @@ const Board: React.FC = () => {
         handleAddPlayerToGame,
         maximumNumberOfRounds,
         registeredPlayersInAsyncStorage,
+        playersToPlay,
     } = useContext(PlayerContext);
+
+    useEffect(() => {
+        console.log('player to play');
+    }, []);
 
     return (
         <ScrollView
