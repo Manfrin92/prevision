@@ -16,15 +16,22 @@ const ConfigureGame: React.FC = () => {
         maximumNumberOfRounds,
         registeredPlayersInAsyncStorage,
     } = useContext(PlayerContext);
+    const [playerNameToAdd, setPlayerNameToAdd] = useState(() => {
+        const firstPlayerInAsync =
+            registeredPlayersInAsyncStorage &&
+            registeredPlayersInAsyncStorage[0] &&
+            registeredPlayersInAsyncStorage[0].name
+                ? registeredPlayersInAsyncStorage[0].name
+                : '';
+        return firstPlayerInAsync;
+    });
 
-    const handleAddingNewPlayerToGame = useCallback(
-        (newPlayerName: string) => {
-            if (newPlayerName !== '') {
-                handleAddPlayerToGame({ name: newPlayerName });
-            }
-        },
-        [handleAddPlayerToGame]
-    );
+    const handleAddingNewPlayerToGame = useCallback(() => {
+        if (playerNameToAdd !== '') {
+            handleAddPlayerToGame({ name: playerNameToAdd });
+            setPlayerNameToAdd('');
+        }
+    }, [handleAddPlayerToGame, playerNameToAdd, setPlayerNameToAdd]);
 
     return (
         <ScrollView
@@ -42,9 +49,13 @@ const ConfigureGame: React.FC = () => {
             <Title> Selecione os jogadores </Title>
             <PlayerSelect
                 listOfRegisteredPlayers={registeredPlayersInAsyncStorage}
-                handleAddingPlayer={(newSelectedPlayerName) => {
-                    handleAddingNewPlayerToGame(newSelectedPlayerName);
-                }}
+                actionTextToDisplay='Adicionar jogador'
+                handleConfirmingActionOnSelectedPlayer={() =>
+                    handleAddingNewPlayerToGame()
+                }
+                handleSelectingPlayer={(playerName) =>
+                    setPlayerNameToAdd(playerName)
+                }
             />
             <Title> Jogadores selecionados </Title>
             <PlayersList></PlayersList>

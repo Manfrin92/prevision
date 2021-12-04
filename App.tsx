@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -18,15 +17,18 @@ export default function App() {
             <NavigationContainer>
                 <Stack.Navigator initialRouteName='Menu'>
                     <Stack.Screen
-                        name='ConfigureGame'
+                        name='Configurar partida'
                         component={ConfigureGame}
                     />
-                    <Stack.Screen name='AddPlayers' component={AddPlayers} />
                     <Stack.Screen
-                        name='RemovePlayers'
+                        name='Registrar jogador'
+                        component={AddPlayers}
+                    />
+                    <Stack.Screen
+                        name='Remover jogador'
                         component={RemovePlayers}
                     />
-                    <Stack.Screen name='Board' component={Board} />
+                    <Stack.Screen name='Partida' component={Board} />
                     <Stack.Screen name='Menu' component={Menu} />
                 </Stack.Navigator>
             </NavigationContainer>

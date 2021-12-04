@@ -1,7 +1,7 @@
 export enum PageNamesEnum {
-    AddPlayers = 'AddPlayers',
-    Board = 'Board',
-    ConfigureGame = 'ConfigureGame',
+    AddPlayers = 'Registrar jogador',
+    Board = 'Partida',
+    ConfigureGame = 'Configurar partida',
     Menu = 'Menu',
-    RemovePlayers = 'RemovePlayers',
+    RemovePlayers = 'Remover jogador',
 }
