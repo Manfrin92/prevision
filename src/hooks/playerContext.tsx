@@ -1,6 +1,9 @@
 import React, { createContext, useState, useCallback, useEffect } from 'react';
 
-import { getMaximumNumberOfRounds } from '../services/gameCalculations';
+import {
+    getMaximumNumberOfRounds,
+    minimumNumberOfPlayers,
+} from '../services/gameCalculations';
 
 import { Player } from '../models/player';
 import {
@@ -19,6 +22,7 @@ interface PlayerContextData {
     handleRemovePlayerToListOfRegisteredPlayers(
         playerName: string
     ): Promise<void>;
+    canInitiateGame(): boolean;
 }
 
 const PlayerContext = createContext<PlayerContextData>({} as PlayerContextData);
@@ -48,6 +52,18 @@ export const PlayerProvider: React.FC = ({ children }) => {
         },
         [playersToPlay]
     );
+
+    const canInitiateGame = useCallback(() => {
+        let canInitiate = true;
+        if (playersToPlay && playersToPlay.length < minimumNumberOfPlayers) {
+            canInitiate = false;
+            Alert.alert(
+                'Erro',
+                `O número mínimo de jogadores é de ${minimumNumberOfPlayers}`
+            );
+        }
+        return canInitiate;
+    }, [playersToPlay]);
 
     const handleAddPlayerToGame = useCallback(
         (player: Player) => {
@@ -95,6 +111,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
                 registeredPlayersInAsyncStorage,
                 handleAddPlayerToListOfRegisteredPlayers,
                 handleRemovePlayerToListOfRegisteredPlayers,
+                canInitiateGame,
             }}
         >
             {children}

@@ -6,15 +6,10 @@ import Button from '../../components/button';
 import PlayerContext from '../../hooks/playerContext';
 
 const Board: React.FC = () => {
-    const {
-        handleAddPlayerToGame,
-        maximumNumberOfRounds,
-        registeredPlayersInAsyncStorage,
-        playersToPlay,
-    } = useContext(PlayerContext);
+    const { maximumNumberOfRounds, playersToPlay } = useContext(PlayerContext);
 
     useEffect(() => {
-        console.log('player to play');
+        console.log('player to play: ', playersToPlay);
     }, []);
 
     return (

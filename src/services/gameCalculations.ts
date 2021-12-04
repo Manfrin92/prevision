@@ -1,6 +1,6 @@
 const deckSize = 54 * 2;
 const minimumNumberOfRounds = 5;
-const minimumNumberOfPlayers = 3;
+export const minimumNumberOfPlayers = 3;
 
 export function getMaximumNumberOfRounds(numberOfPlayers: number): string {
     return (deckSize / numberOfPlayers).toFixed(0);

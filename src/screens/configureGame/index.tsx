@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import React, { useCallback, useContext, useState } from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
+import { PageNamesEnum } from '../../common/enums';
 import Button from '../../components/button';
 
 import PlayerSelect from '../../components/playerSelect';
@@ -15,6 +15,7 @@ const ConfigureGame: React.FC = () => {
         handleAddPlayerToGame,
         maximumNumberOfRounds,
         registeredPlayersInAsyncStorage,
+        canInitiateGame,
     } = useContext(PlayerContext);
     const [playerNameToAdd, setPlayerNameToAdd] = useState(() => {
         const firstPlayerInAsync =
@@ -41,8 +42,12 @@ const ConfigureGame: React.FC = () => {
                 marginTop: '16%',
             }}
         >
-            {/* @ts-ignore */}
-            <Button onPress={() => navigation.navigate('AddPlayers')}>
+            <Button
+                onPress={() => {
+                    /* @ts-ignore */
+                    navigation.navigate(PageNamesEnum.AddPlayers);
+                }}
+            >
                 Adicionar mais jogadores na lista
             </Button>
 
@@ -62,8 +67,15 @@ const ConfigureGame: React.FC = () => {
             <Title style={{ marginBottom: 12 }}>
                 Número máximo de rodadas: {maximumNumberOfRounds}{' '}
             </Title>
-            {/* @ts-ignore */}
-            <Button onPress={() => navigation.navigate('Board')}>
+
+            <Button
+                onPress={() => {
+                    if (canInitiateGame()) {
+                        /* @ts-ignore */
+                        navigation.navigate(PageNamesEnum.Board);
+                    }
+                }}
+            >
                 Iniciar Partida
             </Button>
         </ScrollView>
