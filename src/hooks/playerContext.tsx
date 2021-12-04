@@ -6,6 +6,7 @@ import { Player } from '../models/player';
 import {
     getPlayersInAsyncStorage,
     addPlayerInAsyncStorage,
+    removePlayerInAsyncStorage,
 } from '../services/asyncStorageService';
 import { Alert } from 'react-native';
 
@@ -15,6 +16,9 @@ interface PlayerContextData {
     maximumNumberOfRounds: number;
     registeredPlayersInAsyncStorage: Player[];
     handleAddPlayerToListOfRegisteredPlayers(player: Player): Promise<void>;
+    handleRemovePlayerToListOfRegisteredPlayers(
+        playerName: string
+    ): Promise<void>;
 }
 
 const PlayerContext = createContext<PlayerContextData>({} as PlayerContextData);
@@ -73,6 +77,14 @@ export const PlayerProvider: React.FC = ({ children }) => {
         [registeredPlayersInAsyncStorage, setRegisteredPlayersInAsyncStorage]
     );
 
+    const handleRemovePlayerToListOfRegisteredPlayers = useCallback(
+        async (playerName: string) => {
+            await removePlayerInAsyncStorage(playerName);
+            getInitialPlayerInAsyncStorage();
+        },
+        [registeredPlayersInAsyncStorage, setRegisteredPlayersInAsyncStorage]
+    );
+
     return (
         <PlayerContext.Provider
             value={{
@@ -82,6 +94,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
                 maximumNumberOfRounds,
                 registeredPlayersInAsyncStorage,
                 handleAddPlayerToListOfRegisteredPlayers,
+                handleRemovePlayerToListOfRegisteredPlayers,
             }}
         >
             {children}

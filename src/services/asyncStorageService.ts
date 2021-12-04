@@ -50,9 +50,31 @@ export async function addPlayerInAsyncStorage(player: Player): Promise<void> {
     }
 }
 
-export async function removePlayerInAsyncStorage(): Promise<void> {
+export async function removeAllPlayersInAsyncStorage(): Promise<void> {
     try {
         await AsyncStorage.setItem(storageItemName, JSON.stringify([]));
+    } catch (e) {
+        // e
+    }
+}
+
+async function addPlayerListInAsyncStorage(
+    playerList: Player[]
+): Promise<void> {
+    await AsyncStorage.setItem(storageItemName, JSON.stringify(playerList));
+}
+
+export async function removePlayerInAsyncStorage(
+    playerName: string
+): Promise<void> {
+    try {
+        const allPlayers = await getPlayersInAsyncStorage();
+        if (allPlayers) {
+            const filteredListOfPlayers = allPlayers.filter(
+                (player) => player.name !== playerName
+            );
+            await addPlayerListInAsyncStorage(filteredListOfPlayers);
+        }
     } catch (e) {
         // e
     }

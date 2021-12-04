@@ -8,12 +8,16 @@ import { Player } from '../../models/player';
 
 interface PlayerSelectInterface {
     listOfRegisteredPlayers: Player[];
-    handleAddingPlayer(newSelectedPlayerName: string): void;
+    handleSelectingPlayer(newSelectedPlayerName: string): void;
+    actionTextToDisplay: string;
+    handleConfirmingActionOnSelectedPlayer(): void;
 }
 
 const PlayerSelect: React.FC<PlayerSelectInterface> = ({
     listOfRegisteredPlayers,
-    handleAddingPlayer,
+    handleSelectingPlayer,
+    actionTextToDisplay,
+    handleConfirmingActionOnSelectedPlayer,
 }) => {
     const [selectedPlayerName, setSelectedPlayerName] = useState(
         listOfRegisteredPlayers && listOfRegisteredPlayers.length > 0
@@ -25,7 +29,10 @@ const PlayerSelect: React.FC<PlayerSelectInterface> = ({
         <Container>
             <Picker
                 selectedValue={selectedPlayerName}
-                onValueChange={(name) => setSelectedPlayerName(name)}
+                onValueChange={(name) => {
+                    setSelectedPlayerName(name);
+                    handleSelectingPlayer(name);
+                }}
             >
                 {listOfRegisteredPlayers.map((player) => (
                     <Picker.Item
@@ -35,8 +42,8 @@ const PlayerSelect: React.FC<PlayerSelectInterface> = ({
                     />
                 ))}
             </Picker>
-            <Button onPress={() => handleAddingPlayer(selectedPlayerName)}>
-                Adicionar
+            <Button onPress={() => handleConfirmingActionOnSelectedPlayer()}>
+                {actionTextToDisplay}
             </Button>
         </Container>
     );
