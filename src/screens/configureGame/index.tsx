@@ -42,15 +42,6 @@ const ConfigureGame: React.FC = () => {
                 marginTop: '16%',
             }}
         >
-            <Button
-                onPress={() => {
-                    /* @ts-ignore */
-                    navigation.navigate(PageNamesEnum.AddPlayers);
-                }}
-            >
-                Adicionar mais jogadores na lista
-            </Button>
-
             <Title> Selecione os jogadores </Title>
             <PlayerSelect
                 listOfRegisteredPlayers={registeredPlayersInAsyncStorage}
