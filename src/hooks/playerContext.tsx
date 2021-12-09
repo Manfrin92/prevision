@@ -12,6 +12,7 @@ import {
     removePlayerInAsyncStorage,
 } from '../services/asyncStorageService';
 import { Alert } from 'react-native';
+import { IGameBoardPoints, IRound } from '../models/board';
 
 interface PlayerContextData {
     playersToPlay: [];
@@ -23,6 +24,18 @@ interface PlayerContextData {
         playerName: string
     ): Promise<void>;
     canInitiateGame(): boolean;
+    handleUpdatingSelectedRoundPoint(
+        playerName: string,
+        roundNumberIndex: number,
+        valueChosen: number
+    ): void;
+    handleUpdatingSelectedRoundResult(
+        playerName: string,
+        roundNumberIndex: number,
+        didScored: boolean
+    ): void;
+    listOfPossiblePrevisions: string[];
+    boardGamePoints: IGameBoardPoints[];
 }
 
 const PlayerContext = createContext<PlayerContextData>({} as PlayerContextData);
@@ -34,6 +47,12 @@ export const PlayerProvider: React.FC = ({ children }) => {
         registeredPlayersInAsyncStorage,
         setRegisteredPlayersInAsyncStorage,
     ] = useState([] as Player[]);
+    const [boardGamePoints, setBoardGamePoints] = useState(
+        [] as IGameBoardPoints[]
+    );
+    const [listOfPossiblePrevisions, setListOfPossiblePrevisions] = useState(
+        [] as string[]
+    );
 
     const getInitialPlayerInAsyncStorage = useCallback(async () => {
         const listOfPlayers = await getPlayersInAsyncStorage();
@@ -62,6 +81,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
                 `O número mínimo de jogadores é de ${minimumNumberOfPlayers}`
             );
         }
+        createBoardPoints();
         return canInitiate;
     }, [playersToPlay]);
 
@@ -101,6 +121,95 @@ export const PlayerProvider: React.FC = ({ children }) => {
         [registeredPlayersInAsyncStorage, setRegisteredPlayersInAsyncStorage]
     );
 
+    const createBoardPoints = useCallback(() => {
+        const numberOfRounds = playersToPlay.length;
+        createListOfPossiblePrevisions(numberOfRounds);
+        const inCreationBoardPoints: IGameBoardPoints[] = [];
+        playersToPlay.forEach((player) => {
+            const rounds = new Array(numberOfRounds).fill({});
+            const roundsFilled = [] as IRound[];
+
+            rounds.forEach((value, index) => {
+                const roundInCreation: IRound = {
+                    didScored: true,
+                    order: index,
+                    valueChosen: 10,
+                };
+
+                roundsFilled.push(roundInCreation);
+            });
+
+            const playerPoints: IGameBoardPoints = {
+                playerName: player.name,
+                rounds: roundsFilled,
+            };
+
+            inCreationBoardPoints.push(playerPoints);
+        });
+
+        setBoardGamePoints(inCreationBoardPoints);
+    }, [
+        playersToPlay,
+        setBoardGamePoints,
+        boardGamePoints,
+        setListOfPossiblePrevisions,
+    ]);
+
+    const handleUpdatingSelectedRoundPoint = useCallback(
+        (playerName: string, roundNumberIndex: number, valueChosen: number) => {
+            const playerSelected = boardGamePoints.find(
+                (player) => player.playerName == playerName
+            );
+            if (playerSelected) {
+                const boardGameCopy = [...boardGamePoints];
+                boardGameCopy.forEach((player) => {
+                    if (player.playerName == playerName) {
+                        player.rounds[roundNumberIndex].valueChosen =
+                            valueChosen;
+                    }
+                });
+                setBoardGamePoints(boardGameCopy);
+                console.log('new board? ', boardGameCopy);
+            } else {
+                Alert.alert('Erro', 'Jogador não encontrado');
+            }
+        },
+        [boardGamePoints, setBoardGamePoints]
+    );
+
+    const handleUpdatingSelectedRoundResult = useCallback(
+        (playerName: string, roundNumberIndex: number, didScored: boolean) => {
+            const playerSelected = boardGamePoints.find(
+                (player) => player.playerName == playerName
+            );
+            if (playerSelected) {
+                const boardGameCopy = [...boardGamePoints];
+                boardGameCopy.forEach((player) => {
+                    if (player.playerName == playerName) {
+                        player.rounds[roundNumberIndex].didScored = didScored;
+                    }
+                });
+                setBoardGamePoints(boardGameCopy);
+                console.log('new board? ', boardGameCopy);
+            } else {
+                Alert.alert('Erro', 'Jogador não encontrado');
+            }
+        },
+        [boardGamePoints, setBoardGamePoints]
+    );
+
+    const createListOfPossiblePrevisions = useCallback(
+        (numberOfRounds: number) => {
+            const arrayOfOptions = new Array(numberOfRounds).fill(10);
+            const sumArrayOfOptions = [] as string[];
+            arrayOfOptions.forEach((value, index) =>
+                sumArrayOfOptions.push(`${value + index}`)
+            );
+            setListOfPossiblePrevisions(sumArrayOfOptions);
+        },
+        [setListOfPossiblePrevisions]
+    );
+
     return (
         <PlayerContext.Provider
             value={{
@@ -112,6 +221,10 @@ export const PlayerProvider: React.FC = ({ children }) => {
                 handleAddPlayerToListOfRegisteredPlayers,
                 handleRemovePlayerToListOfRegisteredPlayers,
                 canInitiateGame,
+                boardGamePoints,
+                handleUpdatingSelectedRoundPoint,
+                handleUpdatingSelectedRoundResult,
+                listOfPossiblePrevisions,
             }}
         >
             {children}
