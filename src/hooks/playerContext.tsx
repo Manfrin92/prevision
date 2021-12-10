@@ -28,7 +28,7 @@ interface PlayerContextData {
         playerName: string,
         roundNumberIndex: number,
         valueChosen: number
-    ): void;
+    ): IGameBoardPoints[] | undefined;
     handleUpdatingSelectedRoundResult(
         playerName: string,
         roundNumberIndex: number,
@@ -156,7 +156,12 @@ export const PlayerProvider: React.FC = ({ children }) => {
     ]);
 
     const handleUpdatingSelectedRoundPoint = useCallback(
-        (playerName: string, roundNumberIndex: number, valueChosen: number) => {
+        (
+            playerName: string,
+            roundNumberIndex: number,
+            valueChosen: number
+        ): IGameBoardPoints[] | undefined => {
+            console.log('received: ', valueChosen);
             const playerSelected = boardGamePoints.find(
                 (player) => player.playerName == playerName
             );
@@ -168,8 +173,9 @@ export const PlayerProvider: React.FC = ({ children }) => {
                             valueChosen;
                     }
                 });
+                console.log('setting new board: ', valueChosen);
                 setBoardGamePoints(boardGameCopy);
-                console.log('new board? ', boardGameCopy);
+                return boardGameCopy;
             } else {
                 Alert.alert('Erro', 'Jogador não encontrado');
             }
