@@ -134,6 +134,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
                     didScored: true,
                     order: index,
                     valueChosen: 10,
+                    touched: false,
                 };
 
                 roundsFilled.push(roundInCreation);
@@ -161,7 +162,6 @@ export const PlayerProvider: React.FC = ({ children }) => {
             roundNumberIndex: number,
             valueChosen: number
         ): IGameBoardPoints[] | undefined => {
-            console.log('received: ', valueChosen);
             const playerSelected = boardGamePoints.find(
                 (player) => player.playerName == playerName
             );
@@ -171,9 +171,9 @@ export const PlayerProvider: React.FC = ({ children }) => {
                     if (player.playerName == playerName) {
                         player.rounds[roundNumberIndex].valueChosen =
                             valueChosen;
+                        player.rounds[roundNumberIndex].touched = true;
                     }
                 });
-                console.log('setting new board: ', valueChosen);
                 setBoardGamePoints(boardGameCopy);
                 return boardGameCopy;
             } else {
