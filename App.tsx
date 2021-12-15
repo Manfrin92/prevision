@@ -8,6 +8,7 @@ import AddPlayers from './src/screens/addPlayers';
 import Board from './src/screens/board';
 import RemovePlayers from './src/screens/removePlayers';
 import Menu from './src/screens/menu';
+import Finish from './src/screens/finish';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,7 @@ export default function App() {
                     />
                     <Stack.Screen name='Partida' component={Board} />
                     <Stack.Screen name='Menu' component={Menu} />
+                    <Stack.Screen name='Fim' component={Finish} />
                 </Stack.Navigator>
             </NavigationContainer>
         </AppProvider>

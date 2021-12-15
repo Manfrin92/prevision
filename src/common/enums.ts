@@ -4,4 +4,5 @@ export enum PageNamesEnum {
     ConfigureGame = 'Configurar partida',
     Menu = 'Menu',
     RemovePlayers = 'Remover jogador',
+    FinishGame = 'Fim',
 }
