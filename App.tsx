@@ -31,7 +31,13 @@ export default function App() {
                     />
                     <Stack.Screen name='Partida' component={Board} />
                     <Stack.Screen name='Menu' component={Menu} />
-                    <Stack.Screen name='Fim' component={Finish} />
+                    <Stack.Screen
+                        options={{
+                            headerShown: false,
+                        }}
+                        name='Fim'
+                        component={Finish}
+                    />
                 </Stack.Navigator>
             </NavigationContainer>
         </AppProvider>

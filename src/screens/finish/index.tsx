@@ -43,7 +43,7 @@ const Finish: React.FC = () => {
                 ranking.map((rank, index) => (
                     <View key={rank.playerName + index}>
                         <Title>
-                            {index + 1} - {rank.playerName}
+                            {index + 1} - {rank.playerName} - {rank.sumOfPoints}
                         </Title>
                     </View>
                 ))}
