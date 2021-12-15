@@ -3,7 +3,7 @@ const minimumNumberOfRounds = 5;
 export const minimumNumberOfPlayers = 3;
 
 export function getMaximumNumberOfRounds(numberOfPlayers: number): string {
-    return (deckSize / numberOfPlayers).toFixed(0);
+    return Math.floor(deckSize / numberOfPlayers - 1).toFixed(0);
 }
 
 export function canInitiateGame(numberOfPlayers: number): boolean {

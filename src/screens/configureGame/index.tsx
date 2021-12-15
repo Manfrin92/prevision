@@ -31,6 +31,14 @@ const ConfigureGame: React.FC = () => {
         if (playerNameToAdd !== '') {
             handleAddPlayerToGame({ name: playerNameToAdd });
             setPlayerNameToAdd('');
+        } else {
+            const firstPlayerInAsync =
+                registeredPlayersInAsyncStorage &&
+                registeredPlayersInAsyncStorage[0] &&
+                registeredPlayersInAsyncStorage[0].name
+                    ? registeredPlayersInAsyncStorage[0].name
+                    : '';
+            return firstPlayerInAsync;
         }
     }, [handleAddPlayerToGame, playerNameToAdd, setPlayerNameToAdd]);
 
@@ -55,9 +63,11 @@ const ConfigureGame: React.FC = () => {
             />
             <Title> Jogadores selecionados </Title>
             <PlayersList></PlayersList>
-            <Title style={{ marginBottom: 12 }}>
-                Número máximo de rodadas: {maximumNumberOfRounds}{' '}
-            </Title>
+            {maximumNumberOfRounds !== 3 && (
+                <Title style={{ marginBottom: 12 }}>
+                    Número máximo de rodadas: {maximumNumberOfRounds}{' '}
+                </Title>
+            )}
 
             <Button
                 onPress={() => {

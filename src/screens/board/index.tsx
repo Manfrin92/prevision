@@ -1,5 +1,5 @@
 import { Picker } from '@react-native-picker/picker';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { Alert, Text, View } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -20,6 +20,7 @@ const Board: React.FC = () => {
         handleUpdatingRound,
         maximumNumberOfRounds,
         ranking,
+        goingBackInRound,
     } = useContext(PlayerContext);
     const navigation = useNavigation();
 
@@ -54,10 +55,11 @@ const Board: React.FC = () => {
             <Title style={{ marginTop: 8 }}>Rodada atual: {currentRound}</Title>
 
             <ScrollView horizontal={true}>
-                {boardGamePoints &&
+                {currentRound !== maximumNumberOfRounds &&
+                    boardGamePoints &&
                     boardGamePoints.length > 0 &&
                     boardGamePoints.map((boardGamePoint) => (
-                        <View key={boardGamePoint.playerName}>
+                        <View key={boardGamePoint.playerName + Math.random()}>
                             <Text style={{ fontSize: 18 }}>
                                 {boardGamePoint.playerName}
                             </Text>
@@ -72,7 +74,8 @@ const Board: React.FC = () => {
                                                 <Picker
                                                     key={
                                                         boardGamePoint.playerName +
-                                                        round.order
+                                                        round.order +
+                                                        Math.random()
                                                     }
                                                     style={{
                                                         width: 94,
@@ -92,7 +95,10 @@ const Board: React.FC = () => {
                                                     {listOfPossiblePrevisions.map(
                                                         (number) => (
                                                             <Picker.Item
-                                                                key={number}
+                                                                key={
+                                                                    number +
+                                                                    Math.random()
+                                                                }
                                                                 label={`${number}`}
                                                                 value={number}
                                                             />
@@ -106,7 +112,8 @@ const Board: React.FC = () => {
                                                     <View
                                                         key={
                                                             boardGamePoint.playerName +
-                                                            round.order
+                                                            round.order +
+                                                            Math.random()
                                                         }
                                                         style={{
                                                             width: 94,
@@ -152,6 +159,11 @@ const Board: React.FC = () => {
                                                         </TouchableOpacity>
                                                     </View>
                                                     <View
+                                                        key={
+                                                            boardGamePoint.playerName +
+                                                            round.order +
+                                                            Math.random()
+                                                        }
                                                         style={{
                                                             flexDirection:
                                                                 'row',
@@ -161,8 +173,9 @@ const Board: React.FC = () => {
                                                     >
                                                         <TouchableOpacity
                                                             onPress={() => {
-                                                                console.log(
-                                                                    'clicou no red'
+                                                                goingBackInRound(
+                                                                    round.order,
+                                                                    boardGamePoint.playerName
                                                                 );
                                                             }}
                                                         >
@@ -197,25 +210,29 @@ const Board: React.FC = () => {
                 >
                     <Text>Voltar round</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ borderWidth: 2, padding: 10, borderRadius: 8 }}
-                    onPress={() => handleUpdatingRound(false)}
-                >
-                    <Text>Avançar round</Text>
-                </TouchableOpacity>
+                {currentRound !== maximumNumberOfRounds && (
+                    <TouchableOpacity
+                        style={{ borderWidth: 2, padding: 10, borderRadius: 8 }}
+                        onPress={() => handleUpdatingRound(false)}
+                    >
+                        <Text>Avançar round</Text>
+                    </TouchableOpacity>
+                )}
             </View>
 
             <Title style={{ marginTop: 16 }}>Ranking</Title>
             {ranking &&
                 ranking.length > 0 &&
                 ranking.map((rank, index) => (
-                    <View key={rank.playerName + index}>
+                    <View key={rank.playerName + index + Math.random()}>
                         <Title>
-                            {index + 1} - {rank.playerName}
+                            {index + 1} - {rank.playerName} - {rank.sumOfPoints}
                         </Title>
                     </View>
                 ))}
-            <Button onPress={handleFinishGame}>Finalizar Jogo</Button>
+            {currentRound === maximumNumberOfRounds && (
+                <Button onPress={handleFinishGame}>Finalizar Jogo</Button>
+            )}
         </ScrollView>
     );
 };

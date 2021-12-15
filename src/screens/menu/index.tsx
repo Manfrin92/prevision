@@ -1,14 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { ScrollView } from 'react-native-gesture-handler';
 import { PageNamesEnum } from '../../common/enums';
 import Button from '../../components/button';
+import PlayerContext from '../../hooks/playerContext';
 
 import { Title } from './styles';
 
 const Menu: React.FC = () => {
     const navigation = useNavigation();
+    const { handleResetGame } = useContext(PlayerContext);
 
     return (
         <ScrollView
@@ -44,6 +46,7 @@ const Menu: React.FC = () => {
             >
                 Configurar partida
             </Button>
+            <Button onPress={handleResetGame}>Limpar dados de partidas</Button>
         </ScrollView>
     );
 };

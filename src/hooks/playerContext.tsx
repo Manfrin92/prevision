@@ -44,6 +44,8 @@ interface PlayerContextData {
     handleUpdatingRound(backRound?: boolean): void;
     ranking: IRanking[];
     handleResetGame(): void;
+    goingBackInRound(round: number, playerName: string): void;
+    handleRemovePlayerFromGame(player: Player): void;
 }
 
 const PlayerContext = createContext<PlayerContextData>({} as PlayerContextData);
@@ -127,7 +129,36 @@ export const PlayerProvider: React.FC = ({ children }) => {
             }
         },
 
-        [playersToPlay, setPlayersToPlay]
+        [
+            playersToPlay,
+            setPlayersToPlay,
+            maximumNumberOfRounds,
+            setMaximumNumberOfRounds,
+        ]
+    );
+
+    const handleRemovePlayerFromGame = useCallback(
+        (player: Player) => {
+            if (isPlayerAlreadyInGame(player)) {
+                const filteredPlayer = [...playersToPlay].filter(
+                    (loopingPlayer) => loopingPlayer.name !== player.name
+                );
+                setPlayersToPlay(filteredPlayer);
+
+                setMaximumNumberOfRounds(
+                    +getMaximumNumberOfRounds([...playersToPlay, player].length)
+                );
+            } else {
+                Alert.alert('Jogador já adicionado');
+            }
+        },
+
+        [
+            playersToPlay,
+            setPlayersToPlay,
+            maximumNumberOfRounds,
+            setMaximumNumberOfRounds,
+        ]
     );
 
     useEffect(() => {
@@ -269,6 +300,42 @@ export const PlayerProvider: React.FC = ({ children }) => {
         [boardGamePoints, setBoardGamePoints]
     );
 
+    const goingBackInRound = useCallback(
+        (currentRound: number, playerName: string) => {
+            const boardGameCopy = [...boardGamePoints];
+            boardGameCopy.forEach((player) => {
+                player.rounds.forEach((round) => {
+                    if (
+                        playerName === player.playerName &&
+                        round.order == currentRound
+                    ) {
+                        round.didScored = false;
+                        round.valueChosen = 10;
+                    }
+                });
+            });
+            handleRanking(boardGameCopy);
+            setBoardGamePoints(boardGameCopy);
+        },
+        [boardGamePoints, setBoardGamePoints]
+    );
+
+    const goingFowardInRound = useCallback(
+        (currentRound: number) => {
+            const boardGameCopy = [...boardGamePoints];
+            boardGameCopy.forEach((player) => {
+                player.rounds.forEach((round) => {
+                    if (round.order == currentRound) {
+                        round.didScored = true;
+                    }
+                });
+            });
+            handleRanking(boardGameCopy);
+            setBoardGamePoints(boardGameCopy);
+        },
+        [boardGamePoints, setBoardGamePoints]
+    );
+
     const handleUpdatingRound = useCallback(
         (backRound) => {
             let newRound = currentRound;
@@ -277,14 +344,15 @@ export const PlayerProvider: React.FC = ({ children }) => {
                     newRound--;
                 }
             } else {
-                if (newRound < maximumNumberOfRounds - 1) {
+                if (newRound < maximumNumberOfRounds) {
                     newRound++;
+                    goingFowardInRound(newRound);
                 }
             }
             createListOfPossiblePrevisions();
             setCurrentRound(newRound);
         },
-        [currentRound, setCurrentRound]
+        [currentRound, setCurrentRound, goingFowardInRound]
     );
 
     const handleResetGame = useCallback(() => {
@@ -293,6 +361,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
         setListOfPossiblePrevisions([]);
         setCurrentRound(1);
         setRanking([]);
+        setMaximumNumberOfRounds(3);
     }, [
         playersToPlay,
         setPlayersToPlay,
@@ -304,6 +373,8 @@ export const PlayerProvider: React.FC = ({ children }) => {
         setCurrentRound,
         ranking,
         setRanking,
+        maximumNumberOfRounds,
+        setMaximumNumberOfRounds,
     ]);
 
     return (
@@ -326,6 +397,8 @@ export const PlayerProvider: React.FC = ({ children }) => {
                 handleUpdatingRound,
                 ranking,
                 handleResetGame,
+                goingBackInRound,
+                handleRemovePlayerFromGame,
             }}
         >
             {children}
