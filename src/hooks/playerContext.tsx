@@ -268,10 +268,10 @@ export const PlayerProvider: React.FC = ({ children }) => {
     );
 
     const createListOfPossiblePrevisions = useCallback(() => {
-        const arrayOfOptions = new Array(currentRound + 1).fill(10);
-        const sumArrayOfOptions = ['10'] as string[];
+        const arrayOfOptions = new Array(currentRound + 2).fill(1);
+        const sumArrayOfOptions = [] as string[];
         arrayOfOptions.forEach((value, index) => {
-            sumArrayOfOptions.push(`${value + index + 1}`);
+            sumArrayOfOptions.push(`${value}${index}`);
         });
         setListOfPossiblePrevisions(sumArrayOfOptions);
     }, [setListOfPossiblePrevisions, currentRound]);
