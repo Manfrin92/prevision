@@ -1,5 +1,4 @@
-import { Picker } from '@react-native-picker/picker';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { Alert, Text, View } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -71,40 +70,46 @@ const Board: React.FC = () => {
                                     if (round.order === currentRound) {
                                         if (!round.touched) {
                                             return (
-                                                <Picker
+                                                <View
                                                     key={
                                                         boardGamePoint.playerName +
                                                         round.order +
                                                         Math.random()
                                                     }
-                                                    style={{
-                                                        width: 94,
-                                                        height: 52,
-                                                    }}
-                                                    onValueChange={(
-                                                        selectedNumber
-                                                    ) => {
-                                                        handleUpdatingSelectedRoundPoint(
-                                                            boardGamePoint.playerName,
-                                                            round.order,
-                                                            // @ts-ignore
-                                                            +selectedNumber
-                                                        );
-                                                    }}
                                                 >
                                                     {listOfPossiblePrevisions.map(
                                                         (number) => (
-                                                            <Picker.Item
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    width: 94,
+                                                                    height: 52,
+                                                                    padding: 16,
+                                                                    backgroundColor:
+                                                                        round.valueChosen ===
+                                                                        +number
+                                                                            ? '#adcaf7'
+                                                                            : null,
+                                                                }}
+                                                                onPress={() => {
+                                                                    handleUpdatingSelectedRoundPoint(
+                                                                        boardGamePoint.playerName,
+                                                                        round.order -
+                                                                            1,
+                                                                        +number
+                                                                    );
+                                                                }}
                                                                 key={
                                                                     number +
                                                                     Math.random()
                                                                 }
-                                                                label={`${number}`}
-                                                                value={number}
-                                                            />
+                                                            >
+                                                                <Text>
+                                                                    {number}
+                                                                </Text>
+                                                            </TouchableOpacity>
                                                         )
                                                     )}
-                                                </Picker>
+                                                </View>
                                             );
                                         } else {
                                             return (
@@ -135,7 +140,8 @@ const Board: React.FC = () => {
                                                             onPress={() => {
                                                                 handleRevertingSelectedRound(
                                                                     boardGamePoint.playerName,
-                                                                    round.order
+                                                                    round.order -
+                                                                        1
                                                                 );
                                                             }}
                                                         >
@@ -174,7 +180,8 @@ const Board: React.FC = () => {
                                                         <TouchableOpacity
                                                             onPress={() => {
                                                                 goingBackInRound(
-                                                                    round.order,
+                                                                    round.order -
+                                                                        1,
                                                                     boardGamePoint.playerName
                                                                 );
                                                             }}

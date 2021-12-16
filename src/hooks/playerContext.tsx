@@ -192,11 +192,10 @@ export const PlayerProvider: React.FC = ({ children }) => {
             rounds.forEach((value, index) => {
                 const roundInCreation: IRound = {
                     didScored: true,
-                    order: index,
+                    order: index + 1,
                     valueChosen: 10,
                     touched: true,
                 };
-
                 roundsFilled.push(roundInCreation);
             });
 
@@ -234,6 +233,7 @@ export const PlayerProvider: React.FC = ({ children }) => {
                         player.rounds[roundNumberIndex].valueChosen =
                             valueChosen;
                         player.rounds[roundNumberIndex].touched = true;
+                        player.rounds[roundNumberIndex].didScored = true;
                     }
                 });
                 setBoardGamePoints(boardGameCopy);
@@ -302,6 +302,8 @@ export const PlayerProvider: React.FC = ({ children }) => {
 
     const goingBackInRound = useCallback(
         (currentRound: number, playerName: string) => {
+            console.log('currentRound: ', currentRound);
+            console.log('playerName: ', playerName);
             const boardGameCopy = [...boardGamePoints];
             boardGameCopy.forEach((player) => {
                 player.rounds.forEach((round) => {
@@ -310,7 +312,6 @@ export const PlayerProvider: React.FC = ({ children }) => {
                         round.order == currentRound
                     ) {
                         round.didScored = false;
-                        round.valueChosen = 10;
                     }
                 });
             });
