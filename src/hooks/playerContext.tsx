@@ -302,18 +302,11 @@ export const PlayerProvider: React.FC = ({ children }) => {
 
     const goingBackInRound = useCallback(
         (currentRound: number, playerName: string) => {
-            console.log('currentRound: ', currentRound);
-            console.log('playerName: ', playerName);
             const boardGameCopy = [...boardGamePoints];
             boardGameCopy.forEach((player) => {
-                player.rounds.forEach((round) => {
-                    if (
-                        playerName === player.playerName &&
-                        round.order == currentRound
-                    ) {
-                        round.didScored = false;
-                    }
-                });
+                if (playerName === player.playerName) {
+                    player.rounds[currentRound].didScored = false;
+                }
             });
             handleRanking(boardGameCopy);
             setBoardGamePoints(boardGameCopy);
