@@ -70,9 +70,12 @@ export const PlayerProvider: React.FC = ({ children }) => {
         (boardGamePointsInCreation: IGameBoardPoints[]) => {
             const newRankingListValue = [] as IRanking[];
             boardGamePointsInCreation.forEach((board) => {
-                const sumOfPoints = board.rounds.reduce((sum, a) => {
-                    return a.didScored ? sum + a.valueChosen : 0;
-                }, 0);
+                let sumOfPoints = 0;
+                board.rounds.forEach((round) => {
+                    if (round.didScored) {
+                        sumOfPoints += round.valueChosen;
+                    }
+                });
                 board.totalPoints = sumOfPoints;
                 newRankingListValue.push({
                     sumOfPoints,
