@@ -1,29 +1,27 @@
 {
-  "expo": {
-    "name": "prevision",
-    "slug": "prevision",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "package": "com.salada.prevision"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "expo": {
+        "name": "prevision",
+        "slug": "prevision",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "splash": {
+            "image": "./assets/logo.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#e0e0e0"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": ["**/*"],
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "package": "com.salada.prevision"
+        },
+        "web": {
+            "favicon": "./assets/favicon.png"
+        }
     }
-  }
 }
